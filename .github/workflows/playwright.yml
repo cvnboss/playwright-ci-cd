@@ -1,7 +1,7 @@
 name: Playwright Tests
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ develop ]
 
   pull_request:
     branches: [ main, develop ]
@@ -23,6 +23,8 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
     - uses: actions/checkout@v5
     - uses: actions/setup-node@v5
@@ -38,7 +40,7 @@ jobs:
         if [ "${{ github.event.inputs.browser }}" = "all"] || [ -z "${{ github.event.inputs.browser }}" ]; then
           npx playwright test --reporter=html,github
         else
-          npx playwright test --project="${{ github.event.inputs.browser }}" --reporter=html,github
+          npx playwright test --project="${{ github.event.inputs.browser }}"
         fi
 
     - name: Upload Playwright report
@@ -56,3 +58,35 @@ jobs:
         echo "| Status | Details |" >> $GITHUB_STEP_SUMMARY
         echo "|--------|---------|" >> $GITHUB_STEP_SUMMARY
         echo "| ✅ Report | [Download Artifact](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) |" >> $GITHUB_STEP_SUMMARY
+
+    - uses: actions/upload-artifact@master
+      with:
+        name: allure-results
+        path: allure-results
+        retention-days: 20
+
+    - name: Get Allure history
+      uses: actions/checkout@v4
+      if: always()
+      continue-on-error: true
+      with:
+        ref: gh-pages
+        path: gh-pages
+
+    - name: Build Allure Report
+      uses: simple-elf/allure-report-action@master
+      if: always()
+      id: allure-report
+      with:
+        allure_results: allure-results
+        gh_pages: gh-pages
+        allure_report: allure-report
+        allure_history: allure-history
+
+    - name: Deploy report to Github Pages
+      if: always()
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_branch: gh-pages
+        publish_dir: allure-history

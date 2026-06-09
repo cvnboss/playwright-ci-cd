@@ -1,15 +1,23 @@
 {
-  "name": "session_17",
+  "name": "allure-trace",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test",
+    "allure:generate": "node scripts/allure-history.js && allure generate allure-results --clean -o allure-report",
+    "allure:open": "allure open allure-report",
+    "allure:serve": "node scripts/allure-history.js && allure serve allure-results",
+    "allure:clean": "powershell -Command \"Remove-Item -Recurse -Force allure-results, allure-report -ErrorAction SilentlyContinue\""
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
     "@playwright/test": "^1.60.0",
-    "@types/node": "^25.9.1"
+    "@types/node": "^25.9.2",
+    "allure-commandline": "^2.42.1",
+    "allure-playwright": "^3.9.0"
   }
 }

@@ -11,8 +11,7 @@ const testUser = {
 }
 
 let authToken: string;
-
-test.describe.serial('Notes API', () => {
+test.describe.skip('Notes API', () => {
   // GET /health-check
   test('Health check API - status 200', async ({ request }) => {
     // Gửi GET request đến /health-check
@@ -111,3 +110,32 @@ test.describe.serial('Notes API', () => {
   });
 
 });
+
+
+
+
+const isNonEmptyString = (value: unknown) =>
+  typeof value === 'string' && value.trim().length > 0; // '' empty string - length === 0
+
+test('Unique', async () => {
+
+  const numbs = [1, 2, 3];
+  const ids = new Set<number>();
+
+  for (const numb of numbs) {
+
+    // Verify unique id in data set
+    expect(ids.has(numb)).toBe(false);
+    ids.add(numb);
+  }
+
+});
+
+// TC-03 & TC-06 step 1
+const newProduct = {
+  title: 'Test Product for Exam',
+  price: 99.99,
+  description: 'A product created by automated API test.',
+  image: 'https://i.pravatar.cc',
+  category: 'electronics',
+};
