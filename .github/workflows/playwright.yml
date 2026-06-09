@@ -59,6 +59,12 @@ jobs:
         echo "|--------|---------|" >> $GITHUB_STEP_SUMMARY
         echo "| ✅ Report | [Download Artifact](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) |" >> $GITHUB_STEP_SUMMARY
 
+    - uses: actions/upload-artifact@master
+      with:
+        name: allure-results
+        path: allure-results
+        retention-days: 20
+
     - name: Get Allure history
       uses: actions/checkout@v4
       if: always()
@@ -72,7 +78,7 @@ jobs:
       if: always()
       id: allure-report
       with:
-        allure_results: build/allure-results
+        allure_results: allure-results
         gh_pages: gh-pages
         allure_report: allure-report
         allure_history: allure-history
