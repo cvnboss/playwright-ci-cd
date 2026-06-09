@@ -40,7 +40,7 @@ jobs:
         if [ "${{ github.event.inputs.browser }}" = "all"] || [ -z "${{ github.event.inputs.browser }}" ]; then
           npx playwright test --reporter=html,github
         else
-          npx playwright test --project="${{ github.event.inputs.browser }}" --reporter=html,github
+          npx playwright test --project="${{ github.event.inputs.browser }}"
         fi
 
     - name: Upload Playwright report
